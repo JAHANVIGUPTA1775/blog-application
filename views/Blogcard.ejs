@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* General styles */
+      body {
+        font-family: Arial, sans-serif;
+        /* background-color: aliceblue; */
+        margin: 0;
+        padding: 0;
+      }
+
+      ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        list-style-type: none;
+      }
+
+      ul li {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      ul li:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Title styling */
+      h2 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+      }
+      .create-blog-button {
+        /* display: inline-block; */
+        padding: 10px 20px;
+        margin: 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+      }
+      .delete-button {
+        display: inline-block;
+        padding: 8px 18px;
+        margin: 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #ff2600;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        max-height: 500px;
+      }
+      .container {
+        /* margin: 2rem; */
+        /* margin-top: 20px; */
+        display: flex;
+       justify-content: end;
+        margin-bottom: 2px;
+        padding: 0;
+        margin-right: 0 !important;
+        /* background-color: aliceblue; */
+      }
+    
+      .view {
+        text-decoration: none;
+        display: block;
+      }
+      .role{
+        display: flex;
+        justify-content: center;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <%- include('./partials/header')%>
+
+    <div class="container">
+      <% if(user.role==='author'|| user.role==='admin'){ %>
+      <a href="/createblog" class="create-blog-button">Create Blog</a>
+
+      <%}%> <% if(user.role==='author'){ %>
+
+      <a href="/viewmyblog" class="create-blog-button">View My blogs</a>
+      <%}%> <% if(user.role==='admin'){ %>
+      <a href="/users/register" class="create-blog-button"> Manage user</a>
+      <% } %>
+    </div>
+
+    <h1>Welcome, <%= user.name %>!</h1>
+    <p class="role">  Your role : <strong><%= user.role %></strong></p>
+
+    <!-- <h1>BLOGS</h1> -->
+
+    <!-- <a href="/createblog" class="create-blog-button">Create Blog</a> -->
+    <!-- <a href="/users/logout" class="delete-button">Logout</a> -->
+
+    <ul>
+      <% blogs.forEach(function(blog) { %>
+      <li>
+        <img src="<%= blog.image %>" alt="<%= blog.title %>" />
+        <h2><%= blog.title %></h2>
+        <p><%= blog.category %></p>
+        <a class="create-blog-button" href="/blogdata/<%= blog.id %>"
+          >View Blog</a
+        >
+
+        <% if(user.role==='author'){ %>
+        <form action="/blogdata/<%= blog.id %>?_method=DELETE" method="POST">
+          <button class="delete-button">Delete Blog</button>
+        </form>
+        <% } %>
+
+        <a href="/blogdata/"></a>
+      </li>
+      <% }) %>
+    </ul>
+
+    <%- include('./partials/footer')%>
+  </body>
+</html>
