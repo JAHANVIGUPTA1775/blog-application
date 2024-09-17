@@ -153,9 +153,32 @@ app.get("/", (req, res) => {
 });
 
 app.get("/blogs", checkNotAuthenticated, async (req, res) => {
-  const blog = await client.query("SELECT * FROM blogs");
-  // console.log(`blogs: ${blog.rows}`)
-  res.render("Blogcard", { blogs: blog.rows, user:req.user });
+  // const blog = await client.query("SELECT * FROM blogs");
+  // res.render("Blogcard", { blogs: blog.rows, user:req.user });
+  const limit=3;
+  const page= parseInt(req.query.page)||1;
+  const offset=(page-1)*limit;
+
+  try{
+    const totalBlogsResult=await client.query("SELECT COUNT(*) FROM blogs");
+    const totalBlogs = parseInt(totalBlogsResult.rows[0].count,10);
+    const blogsResult= await client.query("SELECT * FROM blogs ORDER BY createdon DESC LIMIT $1 OFFSET $2", [limit,offset]);
+    const totalPages= Math.ceil(totalBlogs/limit);
+    // console.log(totalBlogs);
+    
+
+    res.render("Blogcard", {
+      blogs: blogsResult.rows,
+      currentPage: page,
+      totalPages:totalPages,
+      user:req.user
+    });
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).send("error fetching blogs");
+
+  }
 });
 
 

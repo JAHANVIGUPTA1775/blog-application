@@ -4,10 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      /* General styles */
       body {
         font-family: Arial, sans-serif;
-        /* background-color: aliceblue; */
+
         margin: 0;
         padding: 0;
       }
@@ -84,20 +83,40 @@
         /* margin: 2rem; */
         /* margin-top: 20px; */
         display: flex;
-       justify-content: end;
+        justify-content: end;
         margin-bottom: 2px;
         padding: 0;
         margin-right: 0 !important;
         /* background-color: aliceblue; */
       }
-    
+
       .view {
         text-decoration: none;
         display: block;
       }
-      .role{
+      .role {
         display: flex;
         justify-content: center;
+      }
+
+      .pagination a {
+        margin: 0 5px;
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #007bff;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+      }
+
+      .pagination a.active {
+        font-weight: bold;
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      .pagination a:hover {
+        background-color: #0056b3;
+        color: #fff;
       }
     </style>
     <title>Document</title>
@@ -118,7 +137,7 @@
     </div>
 
     <h1>Welcome, <%= user.name %>!</h1>
-    <p class="role">  Your role : <strong><%= user.role %></strong></p>
+    <p class="role">Your role : <strong><%= user.role %></strong></p>
 
     <!-- <h1>BLOGS</h1> -->
 
@@ -136,16 +155,43 @@
         >
 
         <% if(user.role==='author'){ %>
-        <form action="/blogdata/<%= blog.id %>?_method=DELETE" method="POST">
-          <button class="delete-button">Delete Blog</button>
+        <form id="delete-<%=blog.id%>" action="/blogdata/<%= blog.id %>?_method=DELETE" method="POST">
+          <button type="button" class="delete-button" onclick="confirmDelete('<%= blog.id %>')">Delete Blog</button>
         </form>
         <% } %>
 
-        <a href="/blogdata/"></a>
+        
       </li>
       <% }) %>
     </ul>
+    <div class="pagination">
+      <%if(currentPage>1){%>
+      <a href="/blogs?page=<%= currentPage -1%>">Previous</a>
+      <%}%> 
+      <% for(let i=1;i<=totalPages;i++){ %>
+      <a
+        href="/blogs?page=<%= i %>"
+        class="<%= i === currentPage ? 'active' : '' %>"
+      >
+        <%= i %>
+      </a>
+      <% }%> 
+      <%if(currentPage < totalPages){%>
+      <a href="/blogs?page=<%= currentPage +1%>">Next</a>
+      <%}%>
+    </div>
 
-    <%- include('./partials/footer')%>
+    <%# include('./partials/footer')%>
   </body>
+
+  <script>
+    function confirmDelete(blogId){
+      const form=document.getElementById(`delete-${blogId}`);
+      const confirmed=confirm("Are you sure you want to delete this blog?");
+      console.log(confirmed)
+      if(confirmed){
+        form.submit();
+      }
+    }
+  </script>
 </html>
