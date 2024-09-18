@@ -46,6 +46,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  res.locals.user = req.user; // 'req.user' contains the authenticated user if logged in
+  next();
+});
+
 app.get("/users/register", checkNotAuthenticated,checkRole('admin') ,(req, res) => {
   return res.render("register");
 });
@@ -117,7 +122,7 @@ app.post(
 app.get("/users/logout", (req, res) => {
   req.logOut(() => {
     req.flash("success_msg", "you have successfully logged out");
-    res.redirect("/users/login");
+    res.redirect("/");
   });
 });
 
@@ -148,9 +153,36 @@ app.get("/createblog", (req, res) => {
   res.render("CreateBlog"); // Render the create blog page template
 });
 
-app.get("/", (req, res) => {
-  res.json({ msg: "hello world" });
+app.get("/", async(req, res) => {
+  // res.json({ msg: "hello world" });
+  const limit=9;
+  const page= parseInt(req.query.page)||1;
+  const offset=(page-1)*limit;
+
+  try{
+    const totalBlogsResult=await client.query("SELECT COUNT(*) FROM blogs");
+    const totalBlogs = parseInt(totalBlogsResult.rows[0].count,10);
+    const blogsResult= await client.query("SELECT * FROM blogs ORDER BY createdon DESC LIMIT $1 OFFSET $2", [limit,offset]);
+    const totalPages= Math.ceil(totalBlogs/limit);
+    // console.log(totalBlogs);
+    
+
+    res.render("Home", {
+      blogs: blogsResult.rows,
+      currentPage: page,
+      totalPages:totalPages,
+      user:req.user
+    });
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).send("error fetching blogs");
+
+  }
 });
+
+
+
 
 app.get("/blogs", checkNotAuthenticated, async (req, res) => {
   // const blog = await client.query("SELECT * FROM blogs");
@@ -196,17 +228,17 @@ app.get("/blogs/:cat", async (req, res) => {
 });
 
 
-app.get("/viewmyblog", async(req,res)=>{
-  try {
-    const result = await client.query(
-      `SELECT * FROM blogs WHERE author_id = $1`,[req.user.id] 
-    );
-    res.render("Viewmyblog", { blogs: result.rows});
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching blogs");
-  }
-})
+// app.get("/viewmyblog", async(req,res)=>{
+//   try {
+//     const result = await client.query(
+//       `SELECT * FROM blogs WHERE author_id = $1`,[req.user.id] 
+//     );
+//     res.render("Viewmyblog", { blogs: result.rows});
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Error fetching blogs");
+//   }
+// })
 
 
 app.get("/blogdata/:id", async (req, res) => {
@@ -223,18 +255,16 @@ app.get("/blogdata/:id", async (req, res) => {
  
 });
 
-app.delete('/blogdata/:id', checkNotAuthenticated, async(req,res)=>{
-  const result=await client.query(`SELECT * FROM blogs where id=$1`, [req.params.id])
-  const blog=result.rows[0];
+// app.delete('/blogdata/:id', checkNotAuthenticated, async(req,res)=>{
+//   const result=await client.query(`SELECT * FROM blogs where id=$1`, [req.params.id])
+//   const blog=result.rows[0];
 
-  if(blog.author_id!==req.user.id){
-    return res.status(403).send("you are not authorized")
-    // return res.render('Blogcard', {blogs: blog, message:'You are not authenticated'})
-    // req.flash('error','you are not authenticated');
-  }
-  await client.query(`DELETE FROM blogs where id=$1`, [req.params.id]);
-  res.redirect('/blogs')
-})
+//   if(blog.author_id!==req.user.id){
+//     return res.status(403).send("you are not authorized")
+//   }
+//   await client.query(`DELETE FROM blogs where id=$1`, [req.params.id]);
+//   res.redirect('/blogs')
+// })
 
 // app.get("/blogs/:id/edit", checkNotAuthenticated, async(req,res)=>{
 
@@ -257,14 +287,21 @@ app.post("/blogs", upload.single("image"), async (req, res) => {
     category: req.body.category,
     image: req.file ? `/uploads/${req.file.filename}` : null, // Use the randomly generated filename
     post: req.body.post,
-    author_id: req.user.id,
+    // author_id: req.user.id,
   };
   // console.log(blogData);
+  const user=req.user;
   try {
-    await client.query(
-      `INSERT INTO blogs (title, image,post, category, author_id) VALUES ($1, $2, $3,$4, $5)`,
-      [blogData.title, blogData.image, blogData.post, blogData.category, blogData.author_id]
+    const newblog=await client.query(
+      `INSERT INTO blogs (title, image,post, category) VALUES ($1, $2, $3,$4) RETURNING id`,
+      [blogData.title, blogData.image, blogData.post, blogData.category]
     );
+    // console.log(newblog.rows);
+    await client.query(
+      `INSERT INTO user_has_blogs (user_id, blog_id) VALUES ($1, $2)`,
+      [user.id, newblog.rows[0].id]
+    );
+    // console.log("user", user);
     res.redirect('/blogs');
   } catch (err) {
     console.error(err);

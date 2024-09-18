@@ -124,21 +124,9 @@
   <body>
     <%- include('./partials/header')%>
 
-    <div class="container">
-      <% if(user.role==='author'|| user.role==='admin'){ %>
-      <a href="/createblog" class="create-blog-button">Create Blog</a>
+  
 
-      <%}%>
-       <% if(user.role==='author'){ %>
-
-      <a href="/viewmyblog" class="create-blog-button">View My blogs</a>
-      <%}%> <% if(user.role==='admin'){ %>
-      <a href="/users/register" class="create-blog-button"> Manage user</a>
-      <% } %>
-    </div>
-
-    <h1>Welcome, <%= user.name %>!</h1>
-    <p class="role">Your role : <strong><%= user.role %></strong></p>
+  
 
     <!-- <h1>BLOGS</h1> -->
 
@@ -155,11 +143,7 @@
           >View Blog</a
         >
 
-        <% if(user.role==='author'){ %>
-        <form id="delete-<%=blog.id%>" action="/blogdata/<%= blog.id %>?_method=DELETE" method="POST">
-          <button type="button" class="delete-button" onclick="confirmDelete('<%= blog.id %>')">Delete Blog</button>
-        </form>
-        <% } %>
+       
 
         
       </li>
@@ -167,32 +151,23 @@
     </ul>
     <div class="pagination">
       <%if(currentPage>1){%>
-      <a href="/blogs?page=<%= currentPage -1%>">Previous</a>
+      <a href="/?page=<%= currentPage -1%>">Previous</a>
       <%}%> 
       <% for(let i=1;i<=totalPages;i++){ %>
       <a
-        href="/blogs?page=<%= i %>"
+        href="/?page=<%= i %>"
         class="<%= i === currentPage ? 'active' : '' %>"
       >
         <%= i %>
       </a>
       <% }%> 
       <%if(currentPage < totalPages){%>
-      <a href="/blogs?page=<%= currentPage +1%>">Next</a>
+      <a href="/?page=<%= currentPage +1%>">Next</a>
       <%}%>
     </div>
 
-    <%include('./partials/footer')%>
+    <%- include('./partials/footer')%>
   </body>
 
-  <script>
-    function confirmDelete(blogId){
-      const form=document.getElementById(`delete-${blogId}`);
-      const confirmed=confirm("Are you sure you want to delete this blog?");
-      console.log(confirmed)
-      if(confirmed){
-        form.submit();
-      }
-    }
-  </script>
+
 </html>
