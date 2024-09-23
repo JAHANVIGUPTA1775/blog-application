@@ -6,26 +6,24 @@
   <title>Blog Card</title>
   
   <style>
-    /* General styles */
     body {
       font-family: Arial, sans-serif;
-      /* background-color: aliceblue; */
       margin: 0;
       padding: 0;
     }
     
     ul {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-      gap: 20px; 
-      padding: 20px;
-      list-style-type: none;
-    }
-    
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        margin: 20px;
+        list-style-type: none;
+      }
     
     ul li {
       background-color: #fff;
-      padding: 20px;
+      padding: 10px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       
@@ -37,21 +35,25 @@
     }
     
     /* Title styling */
-    h2 {
-      margin-top: 0;
-      font-size: 24px;
-      color: #333;
-    }
-    h1{
-      text-align: center;
-    }
-    
-    
-    p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #555;
-    }
+    ul li h2 {
+        margin-top: 0;
+        font-size: 20px;
+        color: #333;
+        /* min-height: 50px;  */
+        overflow: hidden;
+        margin-bottom: 0;
+      }
+      h1 {
+        text-align: center;
+      }
+
+      p {
+        margin-top: auto;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        
+      }
     .create-blog-button {
       display: inline-block;
       padding: 10px 20px;
@@ -78,20 +80,19 @@
       text-align: center;
     }
     
-    img{
-      width: 100%;
-      height: auto;
-      max-width: 100%; 
-      border-radius: 10px;
-      object-fit: cover;
-      margin-bottom: 10px;
-      max-height: 500px;
-    }
+    img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        max-height: 180px;
+      }
     .container{
-      /* margin: 2rem; */
       margin: 0;
       padding: 0;
-      /* background-color: aliceblue; */
+      
     }
     .view{
       text-decoration: none;
@@ -103,14 +104,16 @@
   <ul>
     <% blogs.forEach(function(blog) { %>
       <li>
+        <a href="/blogdata/<%= blog.id %>" class="view">
         <img src="<%= blog.image %>" alt="<%= blog.title %>">
-        <h2><%= blog.title %></h2>
+        <h2> <%= blog.title.length>30 ? blog.title.substr(0,30)+'...': blog.title %></h2>
         <p><%= blog.category %></p>
-        <a class="view" href="/blogdata/<%= blog.id %>">View Blog</a>
-        <a href="/blogdata/"></a>
+       
+        </a>
       </li>
-      <% }) %>
-    </ul>
-    <%- include('./partials/footer')%>
+    <% }) %>
+  </ul>
+  
+  <%- include('./partials/footer')%>
 </body>
 </html>

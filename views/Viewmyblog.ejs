@@ -6,25 +6,28 @@
     <title>Document</title>
     <style>
         /* General styles */
-        body {
+        html, body {
           font-family: Arial, sans-serif;
-          /* background-color: aliceblue; */
           margin: 0;
           padding: 0;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
         }
         
         ul {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
           gap: 20px; 
-          padding: 20px;
+          padding: 10px;
+          margin: 20px;
           list-style-type: none;
         }
         
         
         ul li {
           background-color: #fff;
-          padding: 20px;
+          padding: 10px;
           border-radius: 10px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           
@@ -36,9 +39,9 @@
         }
         
         /* Title styling */
-        h2 {
+        ul li h2 {
           margin-top: 0;
-          font-size: 24px;
+          font-size: 20px;
           color: #333;
         }
         h1{
@@ -66,8 +69,8 @@
         }
         .delete-button{
           display: inline-block;
-          padding: 10px 20px;
-          margin: 20px;
+          padding: 8px 16px;
+          /* margin: 20px; */
           font-size: 16px;
           color: #fff;
           background-color: #ff2600;
@@ -75,43 +78,77 @@
           border-radius: 5px;
           text-decoration: none;
           text-align: center;
+
         }
         
-        img{
+        img {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-bottom: 10px;
+        max-height: 200px;
+      }
+        .myblog{
+       
           width: 100%;
-          height: auto;
-          max-width: 100%; 
-          border-radius: 10px;
-          object-fit: cover;
-          margin-bottom: 10px;
-          max-height: 500px;
+          position: relative;
         }
-        .container{
-          /* margin: 2rem; */
-          margin: 0;
-          padding: 0;
-          /* background-color: aliceblue; */
+        .view{
+          text-decoration: none;
+        }
+        .container2{
+          display: flex;
+          justify-content: space-between;
+        }
+        .content{
+          flex: 1;
         }
         
-            </style>
+      </style>
 </head>
 <body>
+  
   <%- include('./partials/header')%>
+  <div class="content">
     <h1>My Blogs</h1>
 
     <ul>
         <% blogs.forEach(function(blog) { %>
           <li>
-            <img src="<%= blog.image %>" alt="<%= blog.title %>">
-            <h2><%= blog.title %></h2>
-            <p><%= blog.category %></p>
-            <a class="create-blog-button" href="/blogdata/<%= blog.id %>">View Blog</a>
-            <!-- <form action="/blogdata/<%#blog.id %>?_method=DELETE" method="POST">
-              <button class="delete-button">Delete Blog</button>
-             </form> -->
+            
+         
+            <a href="/blogdata/<%= blog.id %>" class="view">
+              <img src="<%= blog.image %>" alt="<%= blog.title %>">
+              <div class="container2">
+              <h2 >
+               <%= blog.title.length>10 ? blog.title.substr(0,28)+'...': blog.title %>
+                <%# blog.title %></h2>
+              
+              <p><%= blog.category %></p>
+              
+            </a>
+            <form id="delete-<%= blog.id %>" action="/blogdata/<%= blog.id %>/?_method=DELETE" method="POST">
+              <button type="button" class="delete-button" onclick="confirmDelete('<%= blog.id %>')">Delete</button>
+            </form>
+          </div>
           </li>
           <% }) %>
         </ul>
+      </div>
         <%- include('./partials/footer')%>
+      
+      
 </body>
+<script>
+  function confirmDelete(blogId) {
+    const form = document.getElementById(`delete-${blogId}`);
+    const confirmed = confirm("Are you sure you want to delete this blog?");
+    console.log(confirmed);
+    if (confirmed) {
+      form.submit();
+    }
+  }
+</script>
 </html>

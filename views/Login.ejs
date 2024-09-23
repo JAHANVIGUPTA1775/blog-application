@@ -55,20 +55,25 @@
         color: red;
 
       }
+      .success-msg {
+        color: green;
+      }
       .no-bullet{
         list-style: none;
+       /* justify-content: center; */
+        text-align:center;
       }
     </style>
   </head>
   <body>
-    <form class="login-form" action="/users/login" method="POST">
+    <form class="login-form" id="loginForm" action="/users/login" method="POST">
       <h1>Login</h1>
-      <ul class="no-bullet">
+      <!-- <ul class="no-bullet"> -->
 
-        <% if(messages.success_msg){ %>
-           <li><%=messages.success_msg %></li>
-        <% }%>
-       </ul>
+        <%# if(success_msg){ %>
+           <!-- <li class="success-msg"><%# success_msg %></li> -->
+        <%# }%>
+       <!-- </ul> -->
    
    
        <ul class="no-bullet">
@@ -85,6 +90,7 @@
           placeholder="Email"
           required
         />
+        <div id="emailError" class="error-msg"></div>
       </div>
       <div class="form-group">
         <input
@@ -93,22 +99,44 @@
           name="password"
           id="password"
           placeholder="Password"
-         
+          required
         />
-      </div>
-      <!-- <div class="form-group">
-        <label for="role">Role:</label>
-        <select class="form-control" id="role" name="role" >
-          <option value="admin">Admin</option>
-          <option value="author">Author</option>
-          <option value="user">User</option>
-        </select>
-      </div> -->
+        <div id="passwordError" class="error-msg"></div>
+        </div>
       <button type="submit" class="btn btn-primary">Login</button>
-      <!-- <div class="form-text">
-        <a href="/users/register">Register here</a>
-      </div> -->
+     
     </form>
+
+    <script>
+
+      document.getElementById('loginForm').addEventListener('submit', function(event){
+        event.preventDefault();
+
+        const email=document.getElementById('email').value;
+        const password=document.getElementById('password').value;
+
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        document.getElementById('emailError').textContent='';
+        document.getElementById('passwordError').textContent = '';
+
+        if(!emailPattern.test(email)){
+          document.getElementById('emailError').textContent='Invalid email format';
+        }
+
+        // if(!passwordPattern.test(password)){
+        //   document.getElementById('passwordError').textContent='Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, one number, and one special character';
+        // }
+
+        // if(emailPattern.test(email) && passwordPattern.test(password)){
+        //   this.submit();
+        // }
+        if(emailPattern.test(email) ){
+          this.submit();
+        }
+      })
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

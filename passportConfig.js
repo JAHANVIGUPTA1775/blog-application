@@ -29,7 +29,7 @@ function initialize(passport) {
             }
           });
         } else {
-          return done(null, false, { message: "email is not registered" });
+          return done(null, false, { message: "Email is not registered" });
         }
       }
     );
@@ -43,6 +43,7 @@ function initialize(passport) {
   );
 
   passport.serializeUser((user, done) => {
+    console.log("user id on login",user.id);
     done(null, user.id);
   });
   passport.deserializeUser((id, done) => {

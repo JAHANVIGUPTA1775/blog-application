@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin: 20px;
+        height: 75vh;
+      }
+
+      .create-blog-button, .admin-panel-button {
+        display: inline-block;
+        margin: 10px 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .create-blog-button:hover {
+        background-color: #0056b3;
+        color: white;
+        
+       
+      }
+      .create-blog-button:focus{
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+      }
+      .admin-panel-button{
+        background-color: green;
+      }
+      .admin-panel-button:hover{
+        color: white;
+        background-color: rgb(1, 88, 1);
+      }
+      .admin-panel-button:focus{
+        outline: none;
+        box-shadow: 0 0 0 4px rgb(1, 88, 1, 0.25);
+      }
+     
+
+      .container p {
+        margin: 20px 0;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/header')%>
+    <div class="container">
+      <div>
+        <h2>Profile</h2>
+        <p>Username: <%= user.name%></p>
+        <p>Email: <%= user.email%></p>
+        <p>Your role is: <%= roleName %></p>
+        <p>You have the following authorizations:</p>
+            <% if(permissionNames.includes('Create Blogs')){%>
+            <a href="/createblog" class="create-blog-button">Create Blog</a>
+            <% }%>
+             <% if(permissionNames.includes('View Own Blogs')){%>
+            <a href="/viewmyblog" class="create-blog-button">View My Blogs</a>
+            <% }%>
+             <% if(permissionNames.includes('Edit Own Blogs')){%>
+            <a href="/viewmyblog" class="create-blog-button">Edit My Blogs</a>
+            <% }%>
+            <% if(permissionNames.includes('Admin Panel')){%>
+            <a href="/admin" class="admin-panel-button">Admin Panel</a>
+            <%}%>
+             <% if(permissionNames.includes('View Blogs')){%>
+            <a href="/blogs" class="create-blog-button">View Blogs</a>
+            <% }%>
+            <%# if(permissionNames.includes('Delete Own Blogs')){%>
+              <!-- <a href="/viewmyblog" class="create-blog-button">Delete My Blogs</a> -->
+              <%# }%> 
+
+            <%# if(permissionNames.includes('Create Role')){%>
+                <!-- <a href="/blogs" class="create-blog-button">Create User</a> -->
+                <%# }%>
+
+        <!-- <%# if(user){ %> 
+                <%# if(user.role === 'author' || user.role === 'admin'){ %>
+                    <a href="/createblog" class="create-blog-button">Create Blog</a>
+                <%# } %> 
+                
+                <%# if(user.role === 'author'){ %>
+                    <a href="/viewmyblog" class="create-blog-button">View My Blogs</a>
+                <%# } %> 
+                
+                <%# if(user.role === 'admin'){ %>
+                    <a href="/admin" class="create-blog-button">Admin Panel</a>
+                <%# } %> 
+            <%# } %>  -->
+
+       
+      </div>
+    </div>
+    <%- include('./partials/footer')%>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage User Permissions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            margin: 40px auto;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f5f9fc;
+            color: rgb(16, 14, 14);
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .create-blog-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .create-blog-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .container h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/header')%>
+    <div>
+        <!-- <h1>Manage User Permissions</h1> -->
+        <div class="container">
+            <h2>Users</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Userame</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.name %></td>
+                            <td><%= user.email %></td>
+                            <td>
+                                <form action="/permissions/edit-user-role" method="POST">
+                                    <input type="hidden" value="<%= user.id %>" name="userid">
+                                    <select name="roleid">
+                                       <% roles.forEach(role => { %>
+                                            <option value="<%= role.id %>" <%= role.id === user.role_id ? 'selected' : '' %>>
+                                                <%= role.role_name %>
+                                            </option>
+                                      <% }) %>
+                                    </select>
+                                    <button type="submit" class="create-blog-button">Change Role</button>
+                                </form>
+                            </td>
+                        </tr>
+                   <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <%- include('./partials/footer')%>
+</body>
+</html>

@@ -18,16 +18,19 @@
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
               <a class="nav-link" href="/blogs/Nature">Nature</a>
-          <a class="nav-link" href="/blogs/Technology">Technology</a>
-          <a class="nav-link" href="/blogs/Politics">Politics</a>
-          <a class="nav-link" href="/blogs/Travel">Travel</a>
-         
-             <% if(user){ %>
+              <a class="nav-link" href="/blogs/Technology">Technology</a>
+              <a class="nav-link" href="/blogs/Politics">Politics</a>
+              <a class="nav-link" href="/blogs/Travel">Travel</a>
+              
+              <form action=""></form>
 
-                <a class="btn btn-outline-dark ms-auto" id ="navbar" href="/users/logout">Logout</a>
+             <% if(user){ %>
+                <a class="btn btn-outline-dark ms-auto me-1" href="/profile">Profile</a>
+                <a class="btn btn-outline-dark ms-auto  " id ="logoutbtn" href="/users/logout" >Logout</a>
+                
              <% }else{%>
 
-                <a class="btn btn-outline-dark ms-auto" id ="navbarlogin" href="/users/login">Login</a>
+                <a class="btn btn-outline-dark ms-auto" id ="loginbtn" href="/users/login">Login</a>
              <% }%>
              
             </div>
@@ -49,5 +52,11 @@
   // button.addEventListener('click',()=>{
   //   window.location.href="/users/login";
   // });
+
+  document.getElementById('logoutbtn').addEventListener('click', function(event){
+    if(!confirm('Are you sure you want to logout?')){
+      event.preventDefault();
+    }
+  })
 </script>
 </html>

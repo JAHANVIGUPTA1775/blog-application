@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+         html, body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
+.createrole-form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.createrole-form h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #555;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+     margin: 30px;
+     flex: 1;
+}
+
+    </style>
+</head>
+<body>
+    <%- include('./partials/header')%>
+   
+    <div class="container">
+
+   
+        <form action="/createrole" id="createRoleForm" class="createrole-form" method="POST">
+            <h1>Create New Role</h1>
+            <div class="form-group">
+                <label for="rolename">Role name:</label>
+                <input type="text" id="rolename" name="rolename" required>
+                
+            </div>
+
+            <div class="form-group">
+                <label for="permission">Permissions:</label>
+                <% permissions.forEach(permission=>{ %>
+                    <div>
+                        <input type="checkbox" name="permissions[]" value="<%= permission.id %>" id="<%= permission.id %>">
+                        <label for="<%= permission.per_name %>"><%= permission.per_name %></label>
+                    </div>
+               <% }) %>
+            </div>
+            <button type="submit">Create role</button>
+
+        </form>
+    </div> 
+    <%- include('./partials/footer') %>
+</body>
+
+</html>

@@ -13,14 +13,14 @@
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
         height: 100vh;
-        display: flex;
+        /* display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center; */
       }
 
       .register-form {
         background: #fff;
-        padding: 30px;
+        padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         max-width: 400px;
@@ -33,99 +33,164 @@
       }
 
       .form-group {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+        /* display: flex;
+        justify-content: center; */
+        /* text-align: center; */
       }
 
       .btn-primary {
         width: 100%;
       }
 
-      .form-text a {
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-      }
-
       ul {
         list-style-type: none;
         padding: 0;
-        margin-bottom: 15px;
         color: #d9534f;
       }
 
       li {
         margin-bottom: 10px;
       }
+      .back-to-block-list {
+        margin-top: 5px;
+        display: flex;
+        justify-content: flex-end;
+        text-decoration-line: none;
+      }
+      .container {
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+      }
+      .error-msg{
+        color: red;
+      }
     </style>
   </head>
   <body>
-    <form class="register-form" action="/users/register" method="post">
-      <h1>Register</h1>
-      <ul>
-        <% if (typeof errors !== 'undefined') { %>
-          <% errors.forEach(function (error) { %>
-            <li><%= error.message %></li>
-          <% }) %>
-        <% } %>
-      </ul>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          name="name"
-          required
-        />
-      </div>
+    <%-include('./partials/header')%>
+    <div class="container">
+      <form
+        class="register-form"
+        id="register-form"
+        action="/users/register"
+        method="post"
+      >
+        <h1>Register</h1>
+        <ul>
+          <% if (typeof errors !== 'undefined') { %> <% errors.forEach(function
+          (error) { %>
+          <li><%= error.message %></li>
+          <% }) %> <% } %>
+        </ul>
+        <div class="form-group">
+          <label for="name">Username:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            name="name"
+            required
+          />
+          <div id="nameError" class="error-msg"></div>
+        </div>
 
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          name="email"
-          required
-        />
-      </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            required
+          />
+          <div id="emailError" class="error-msg"></div>
+        </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          name="password"
-          required
-        />
-      </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+          <div id="passwordError" class="error-msg"></div>
+        </div>
 
-      <div class="form-group">
-        <label for="password2">Confirm Password:</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password2"
-          name="password2"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="role">Role:</label>
-        <select class="form-control" id="role" name="role" >
-          <option value="admin">Admin</option>
-          <option value="author">Author</option>
-          <option value="user">User</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="password2">Confirm Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password2"
+            name="password2"
+            required
+          />
+          <div id="password2Error" class="error-msg"></div>
+        </div>
+        <div class="form-group">
+          <label for="role">Role:</label>
+          <select class="form-control" id="role" name="role">
+            <% roles.forEach(role=>{ %>
+            <option value="<%=role.id%>"><%=role.role_name%></option>
+            <% })%>
+          </select>
+        </div>
 
-      <button type="submit" class="btn btn-primary">Register</button>
-      <a href="/blogs">Back to Home page</a>
-      <!-- <div class="form-text">
-        <a href="/users/login">Already registered? Login here...</a>
-      </div> -->
-    </form>
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a href="/blogs" class="back-to-block-list">Back to Home page</a>
+      </form>
+    </div>
+    <%- include('./partials/footer') %>
+
+    <script>
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const name = document.getElementById('name').value;
+          const email = document.getElementById('email').value;
+          const password = document.getElementById('password').value;
+          const password2 = document.getElementById('password2').value;
+
+
+          const namePattern = /^[a-zA-Z0-9_]{3,30}$/; // Alphanumeric characters and underscores, 3 to 30 characters
+          const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Valid email format
+          const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+
+          let isValid=true;
+
+          document.querySelectorAll('.error-msg').forEach(el=>el.textContent='');
+
+          if(!namePattern.test(name)){
+            isValid=false;
+            document.getElementById('nameError').textContent='Username must be 3 to 30 characters long and can include letters, numbers, and underscores.';
+          }
+          if (!emailPattern.test(email)) {
+            isValid = false;
+            document.getElementById('emailError').textContent = 'Invalid email format.';
+          }
+
+
+        if (!passwordPattern.test(password)) {
+          isValid = false;
+          document.getElementById('passwordError').textContent = 'Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, one number, and one special character.';
+        }
+        if (password !== password2) {
+        isValid = false;
+        document.getElementById('password2Error').textContent = 'Passwords do not match.';
+      }
+
+      if (isValid) {
+        this.submit();
+      }
+    });
+
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
