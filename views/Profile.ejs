@@ -82,22 +82,23 @@
              <% if(permissionNames.includes('View Own Blogs')){%>
             <a href="/viewmyblog" class="create-blog-button">View My Blogs</a>
             <% }%>
-             <% if(permissionNames.includes('Edit Own Blogs')){%>
-            <a href="/viewmyblog" class="create-blog-button">Edit My Blogs</a>
-            <% }%>
+           
             <% if(permissionNames.includes('Admin Panel')){%>
             <a href="/admin" class="admin-panel-button">Admin Panel</a>
             <%}%>
              <% if(permissionNames.includes('View Blogs')){%>
             <a href="/blogs" class="create-blog-button">View Blogs</a>
             <% }%>
+            <% if(permissionNames.includes('Delete All Blogs')){%>
+              <a href="/modify_blogs" class="create-blog-button">Modify Blogs</a>
+              <% }%>
             <%# if(permissionNames.includes('Delete Own Blogs')){%>
               <!-- <a href="/viewmyblog" class="create-blog-button">Delete My Blogs</a> -->
               <%# }%> 
-
-            <%# if(permissionNames.includes('Create Role')){%>
-                <!-- <a href="/blogs" class="create-blog-button">Create User</a> -->
+              <%# if(permissionNames.includes('View Own Blogs')){%>
+                <!-- <a href="/blogs/edit/<%# user.id%>" class="create-blog-button">Edit All Blogs</a> -->
                 <%# }%>
+            
 
         <!-- <%# if(user){ %> 
                 <%# if(user.role === 'author' || user.role === 'admin'){ %>

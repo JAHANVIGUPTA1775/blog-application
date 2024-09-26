@@ -5,34 +5,54 @@ const client = require("./db/conn.js");
 
 function initialize(passport) {
   const authenticateUser = async (email, password, done) => {
-    client.query(
-      `SELECT * FROM users WHERE email =$1`,
-      [email],
-      (err, results) => {
-        if (err) {
-          throw err;
-        }
-        // console.log(results.rows)
 
-        if (results.rows.length > 0) {
-          const user = results.rows[0];
+    try {
+      const results= await client.query('SELECT * FROM users WHERE email=$1', [email]);
+      if(results.rows.length>0){
+        const user= results.rows[0];
 
-          bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-              console.log(err);
-            }
-            if (isMatch) {
-              return done(null, user);
-            } else {
-              //password is incorrect
-              return done(null, false, { message: "Password is incorrect" });
-            }
-          });
-        } else {
-          return done(null, false, { message: "Email is not registered" });
+        const isMatch= await bcrypt.compare(password, user.password);
+        if(isMatch){
+          return done(null, user);
         }
+        else{
+          return done(null, false, {message:'Password is incorrect'});
+        }
+        
       }
-    );
+      else{
+        return done(null, false, {message:'Email is not registered'});
+      }
+    } catch (error) {
+        console.log(error);
+        return done(error);
+    }
+    // client.query(`SELECT * FROM users WHERE email =$1`,[email],
+    //   (err, results) => {
+    //     if (err) {
+    //       throw err;
+    //     }
+    //     // console.log(results.rows)
+
+    //     if (results.rows.length > 0) {
+    //       const user = results.rows[0];
+
+    //       bcrypt.compare(password, user.password, (err, isMatch) => {
+    //         if (err) {
+    //           console.log(err);
+    //         }
+    //         if (isMatch) {
+    //           return done(null, user);
+    //         } else {
+    //           //password is incorrect
+    //           return done(null, false, { message: "Password is incorrect" });
+    //         }
+    //       });
+    //     } else {
+    //       return done(null, false, { message: "Email is not registered" });
+    //     }
+    //   }
+    // );
   };
 
   passport.use(
@@ -43,7 +63,7 @@ function initialize(passport) {
   );
 
   passport.serializeUser((user, done) => {
-    console.log("user id on login",user.id);
+    // console.log("user id on login",user.id);
     done(null, user.id);
   });
   passport.deserializeUser((id, done) => {

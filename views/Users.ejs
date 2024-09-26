@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage User Permissions</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -102,7 +103,7 @@
                             <td><%= user.name %></td>
                             <td><%= user.email %></td>
                             <td>
-                                <form action="/permissions/edit-user-role" method="POST">
+                                <form action="/permissions/edit-user-role" method="POST" class="userForm">
                                     <input type="hidden" value="<%= user.id %>" name="userid">
                                     <select name="roleid">
                                        <% roles.forEach(role => { %>
@@ -122,4 +123,26 @@
     </div>
     <%- include('./partials/footer')%>
 </body>
+<script>
+   
+   document.querySelectorAll(".userForm").forEach(form=>{
+    form.addEventListener("submit", (event)=>{
+      event.preventDefault();
+      Swal.fire({
+          
+          text: "Role changed successfully",
+          icon: 'success',
+          confirmButtonText: 'Okay'
+        }) .then((result) => {
+            if (result.isConfirmed) {
+                // Only submit the form after the user confirms
+                form.submit();
+            }
+        });
+    })
+   })
+    
+</script>
+
+
 </html>

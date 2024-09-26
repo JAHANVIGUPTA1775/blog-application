@@ -35,14 +35,6 @@ INSERT INTO permissions (id, per_name) VALUES
 (3, 'Delete Blogs'),
 (4, 'View Blogs');
 
-INSERT INTO rolehaspermission (role_id, permission_id) VALUES
-(1, 1), -- Admin can Create Posts
-(1, 2), -- Admin can Edit Posts
-(1, 3), -- Admin can Delete Posts
-(1, 4), -- Admin can View Posts
-(2, 2), -- author can Edit Posts
-(2, 4); -- author can View Posts
-
 
 INSERT INTO rolehaspermission (role_id, permission_id) VALUES
 (1, 1), 
@@ -58,3 +50,6 @@ DROP column role
 
 ALTER TABLE users
 ADD COLUMN created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+ALTER TABLE blogs
+ADD COLUMN edited_at TIMESTAMP DEFAULT NULL;

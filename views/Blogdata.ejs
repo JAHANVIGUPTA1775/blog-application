@@ -1,81 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= blogs.title %></title>
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: aliceblue;
-        }
-        .blog-container {
-            margin: 50px auto;
-            max-width: 900px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 3px;
-        }
-        .blog-title {
-            font-size: 2.5rem;
-            color: #333;
-        }
-        .blog-category {
-            font-size: 1.2rem;
-            color: #6c757d;
-            margin-bottom: 20px;
-        }
-        .blog-post {
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.8;
-        }
-        .back-link {
-            display: block;
-            margin-top: 30px;
-            font-size: 1rem;
-            text-align: center;
-            text-decoration: none;
-            color: #007bff;
-        }
-        .back-link:hover {
-            text-decoration: underline;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: aliceblue;
+      }
+      .blog-container {
+        margin: 50px auto;
+        max-width: 900px;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        margin: 20px 0;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 3px;
+      }
+      .blog-title {
+        font-size: 2.5rem;
+        color: #333;
+      }
+      .blog-category {
+        font-size: 1.2rem;
+        color: #6c757d;
+        margin-bottom: 20px;
+      }
+      .blog-post {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.8;
+      }
+      .back-link {
+        display: block;
+        margin-top: 30px;
+        font-size: 1rem;
+        text-align: center;
+        text-decoration: none;
+        color: #007bff;
+        text-align: end;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      .editdate {
+        color: gray;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <%- include('./partials/header')%>
     <div class="container">
-        <div class="blog-container">
-            <!-- <a href="/blogs/<%#blogs.id%>/edit">Edit blog</a> -->
-            <h1 class="blog-title text-center"><%= blogs.title %></h1>
-            <p class="text-center"><%= blogs.formatDate %></p>
-            
-            <img src="<%= blogs.image %>" alt="<%= blogs.title %>" class="img-fluid d-block mx-auto">
-            
-            <p class="blog-category text-center"><%= blogs.category %></p>
-            <div class="blog-post">
-                <%- blogs.post %>
-            </div>
-            <a href="/blogs" class="back-link"> Back to Blogs</a>
-        </div>
+      <div class="blog-container">
+        <!-- <a href="/blogs/<%#blogs.id%>/edit">Edit blog</a> -->
+        <h1 class="blog-title text-center"><%= blogs.title %></h1>
+        <p class="text-center"><%= blogs.formatDate %> | Author: <%= username %></p>
+       
+        <img
+          src="<%= blogs.image %>"
+          alt="<%= blogs.title %>"
+          class="img-fluid d-block mx-auto"
+        />
+
+        <p class="blog-category text-center"><%= blogs.category %></p>
+        <div class="blog-post"><%- blogs.post %></div>
+
+        <% if(blogs.edited_at){ %>
+        <p class="editdate">Last edited at: <%= blogs.editDate %></p>
+        <% } %>
+        <a href="/blogs" class="back-link"> Back to Blogs</a>
+      </div>
     </div>
     <%- include ('./partials/footer') %>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>

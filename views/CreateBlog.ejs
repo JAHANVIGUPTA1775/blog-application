@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
       body {
         background-color: aliceblue;
         margin: 0;
         padding: 0;
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* justify-content: center; */
         align-items: center;
         height: 100vh;
       }
@@ -52,7 +49,7 @@
         height: 150px;
       }
 
-      button {
+      /* button {
         background-color: #007bff;
         color: #fff;
         padding: 10px 20px;
@@ -65,13 +62,12 @@
 
       button:hover {
         background-color: #0056b3;
-      }
+      } */
       .container{
         margin: 20px;
       }
       .create-blog-button {
-       
-        /* padding: 10px 20px; */
+     
         margin:5px 0px;
         font-size: 16px;
         color: #fff;
@@ -80,6 +76,7 @@
         border-radius: 5px;
         text-decoration: none;
         text-align: center;
+        padding: 10px 20px;
       }
       .create-blog-button:hover {
         color: white;
@@ -96,13 +93,13 @@
   <body>
     <%- include('./partials/header')%>
     <div class="container">
-      <form action="/blogs" method="POST" enctype="multipart/form-data">
+      <form action="/blogs" id="createBlogForm" method="POST" enctype="multipart/form-data">
         <h1>Create Blog</h1>
         <label for="title">Title</label>
         <input type="text" id="title" name="title" required />
 
         <label for="category">Category</label>
-        <select name="category" id="category">
+        <select name="category" id="category" required>
           <option value="Nature">Nature</option>
           <option value="Travel">Travel</option>
           <option value="Technology">Technology</option>
@@ -110,10 +107,10 @@
         </select>
 
         <label for="image">Image</label>
-        <input type="file" id="image" name="image" />
+        <input type="file" id="image" name="image" required/>
 
         <label for="post">Post</label>
-        <textarea id="post" name="post"></textarea>
+        <textarea id="post" name="post" required></textarea>
 
         <button type="submit" class="create-blog-button">Submit</button>
         <a href="/blogs" class="back-to-block-list">Back to Blog List</a>
@@ -121,8 +118,24 @@
     </div>
     <%- include('./partials/footer') %>
   </body>
+
   <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
   <script>
     CKEDITOR.replace('post');
+   
+    document.getElementById("createBlogForm").addEventListener("submit", (event)=>{
+      event.preventDefault();
+      Swal.fire({
+          title: 'Create Blog',
+          text: "Blog added successfully",
+          icon: 'success',
+          confirmButtonText: 'Okay'
+        }) .then((result) => {
+            if (result.isConfirmed) {
+                // Only submit the form after the user confirms
+                event.target.submit();
+            }
+        });
+    })
 </script>
 </html>

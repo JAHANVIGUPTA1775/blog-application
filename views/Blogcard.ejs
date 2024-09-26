@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      html,
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
 
       ul {
@@ -45,9 +49,9 @@
         font-size: 16px;
         line-height: 1.6;
         color: #555;
-        
       }
-      .create-blog-button, .search-button {
+      .create-blog-button,
+      .search-button {
         /* display: inline-block; */
         padding: 10px 20px;
         margin: 20px;
@@ -64,7 +68,7 @@
         background-color: #0056b3; /* Darker shade for hover */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
       }
-      .search-button{
+      .search-button {
         padding: 7px 15px;
         margin: 10px;
         font-size: 16px;
@@ -91,12 +95,12 @@
         margin-bottom: 10px;
         max-height: 180px;
       }
-    
+
       .view {
         text-decoration: none;
         display: block;
       }
-      .pagination{
+      .pagination {
         justify-content: end;
         margin: 10px;
       }
@@ -108,7 +112,6 @@
         color: #007bff;
         background-color: #f1f1f1;
         border-radius: 5px;
-
       }
 
       .pagination a.active {
@@ -121,43 +124,57 @@
         background-color: #0056b3;
         color: #fff;
       }
-      .blogs-header{
+      .blogs-header {
         display: flex;
         justify-content: end;
+      }
+      .container {
+        /* height: 70vh; */
+        flex: 1;
+      }
+      /* .error-msg{
+        color: gray;
+
+      } */
+      h3 {
+        color: grey;
+        text-align: center;
       }
     </style>
     <title>Document</title>
   </head>
   <body>
-   
-    <%- include('./partials/header')%>
-   
-      
-      <% if(user){ %>
+    <%- include('./partials/header')%> <%# if(user){ %>
 
-        <h1>Welcome, <%= user.name %>!</h1>
-      <% } %>
-      <div class="blogs-header">
-        <form id="se1">
-          <input type="search" placeholder="Search Blogs" name="q" id="qu">
-          <button type="submit" class="search-button" id="but">Search</button>
-        </form>
-      </div>
+    <!-- <h1>Welcome, <%# user.name %>!</h1> -->
+    <%# } %>
 
-    <ul>
-      <% blogs.forEach(function(blog) { %>
-      <li>
-        <a href="/blogdata/<%= blog.id %>" class="view">
-          <img src="<%= blog.image %>" alt="<%= blog.title %>" />
-          <h2>
-            <%= blog.title.length>30 ? blog.title.substr(0,30)+'...': blog.title %>
-          </h2>
-          <p><%= blog.category %></p>
-        </a>
-      </li>
+    <div class="blogs-header">
+      <form id="se1" action="/se1" method="GET">
+        <input type="search" placeholder="Search Blogs" name="q" value="<%= q %>" />
+        <button type="submit" class="search-button">Search</button>
+      </form>
+    </div>
+    <div class="container">
       
-      <% }) %>
-    </ul>
+      <% if(blogs.length>0){ %>
+        <ul>
+          <% blogs.forEach(function(blog) { %>
+          <li>
+            <a href="/blogdata/<%= blog.id %>" class="view">
+              <img src="<%= blog.image %>" alt="<%= blog.title %>" />
+              <h2>
+                <%= blog.title.length>30 ? blog.title.substr(0,30)+'...':
+                blog.title %>
+              </h2>
+              <p><%= blog.category %></p>
+            </a>
+          </li> 
+        <% }) } else { %>
+          <h3 class="error-msg">No blogs found matching your search</h3>
+        </ul>
+      <% } %> 
+    </div>
     <div class="pagination">
       <% if(currentPage > 1){%>
       <a href="/blogs?page=<%= currentPage -1%>">Previous</a>
@@ -185,6 +202,17 @@
         form.submit();
       }
     }
+
+    // document.getElementById("se1").addEventListener('submit', async(event)=>{
+
+    //   const inputval=document.querySelector('input[name="q"]').value.trim();
+    //   if(inputval ===''){
+    //     alert("Please enter a search term")
+    //     event.preventDefault();
+
+    //   }
+    // })
+
     // document.getElementById('but').addEventListener('submit',async()=>{
 
     //   const q= document.getElementById('qu').value;
