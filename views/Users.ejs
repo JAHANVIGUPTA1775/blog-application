@@ -103,7 +103,7 @@
                             <td><%= user.name %></td>
                             <td><%= user.email %></td>
                             <td>
-                                <form action="/permissions/edit-user-role" method="POST" class="userForm">
+                                <form action="/seeUsers" method="POST" class="userForm">
                                     <input type="hidden" value="<%= user.id %>" name="userid">
                                     <select name="roleid">
                                        <% roles.forEach(role => { %>
