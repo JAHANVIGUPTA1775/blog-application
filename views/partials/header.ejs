@@ -33,8 +33,6 @@
              <% }%>
              
             </div>
-           
-          
         </div>
       </nav>
      
@@ -44,7 +42,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script>
 
-  document.getElementById('logoutbtn').addEventListener('click', function(event){
+  const logoutbtn= document.getElementById('logoutbtn');
+  if(logoutbtn){
+    logoutbtn.addEventListener('click', function(event){
       event.preventDefault();
       Swal.fire({
               text: 'Are you sure you want to logout',
@@ -59,12 +59,9 @@
                   window.location.href="/users/logout";
               }
           });
-// document.getElementById('logoutbtn').addEventListener('click', function(event){
-  //   if(!confirm('Are you sure you want to logout?')){
-  //     event.preventDefault();
-  //   }
-  // })
-    // }
+
   })
+  }
+  
 </script>
 </html>

@@ -12,6 +12,7 @@ const flash = require("express-flash");
 const path = require("path");
 const methodOverride = require("method-override");
 
+const { connection }= require("./db/sequalize")
 
 const blogsRouter=require("./routes/blogs")
 const blogdataRouter= require("./routes/blogdata")
@@ -26,7 +27,7 @@ const homeRouter = require("./routes/home.js")
 const editRouter= require("./routes/edit.js")
 const seeusersRouter= require("./routes/users.js")
 const logoutRouter= require("./routes/logout.js")
-const deleteblogRouter= require("./routes/delete_modify.js")
+const modifyRouter= require("./routes/modify.js")
 const searchRouter= require("./routes/search.js")
 
 app.use(express.json());
@@ -63,10 +64,9 @@ app.use("/users/login", loginRouter);
 
 app.use("/users/logout", logoutRouter);
 
-app.use("/createblog", createblogRouter);
+app.use("/createblog", createblogRouter); 
 
 app.use("/", homeRouter);
-
 
 app.use("/blogs", blogsRouter);
 
@@ -74,7 +74,7 @@ app.use("/viewmyblog", viewblogRouter);
 
 app.use("/blogdata", blogdataRouter);
 
-app.use("/delete_blog", deleteblogRouter);
+app.use("/modify", modifyRouter);
 
 app.use("/se1", searchRouter);
 
@@ -97,6 +97,9 @@ app.use("/createrole", createroleRouter);
 
 app.use("/profile", profileRouter);
 
+
+connection();
 app.listen(port, () => {
+  // console.log("starting database connection");
   console.log(`Example app listening on port ${port}`);
 });

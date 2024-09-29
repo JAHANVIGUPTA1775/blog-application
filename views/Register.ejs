@@ -79,12 +79,12 @@
         method="post"
       >
         <h1>Register</h1>
-        <ul>
-          <% if (typeof errors !== 'undefined') { %> <% errors.forEach(function
+        <!-- <ul>
+          <%# if (typeof errors !== 'undefined') { %> <%# errors.forEach(function
           (error) { %>
-          <li><%= error.message %></li>
-          <% }) %> <% } %>
-        </ul>
+          <li><%# error.message %></li>
+          <%# }) %> <%# } %>
+        </ul> -->
         <div class="form-group">
           <label for="name">Username:</label>
           <input
@@ -150,14 +150,14 @@
     <script>
       document
         .getElementById("register-form")
-        .addEventListener("submit", function (event) {
+        .addEventListener("submit", async function (event) {
           event.preventDefault();
 
           const name = document.getElementById('name').value;
           const email = document.getElementById('email').value;
           const password = document.getElementById('password').value;
           const password2 = document.getElementById('password2').value;
-
+          const role= document.getElementById('role').value;
 
           const namePattern = /^[a-zA-Z0-9_]{3,30}$/; // Alphanumeric characters and underscores, 3 to 30 characters
           const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Valid email format
@@ -182,24 +182,44 @@
           document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long, with one uppercase letter, one lowercase letter, one number, and one special character.';
         }
         if (password !== password2) {
-        isValid = false;
-        document.getElementById('password2Error').textContent = 'Passwords do not match.';
-      }
+          isValid = false;
+          document.getElementById('password2Error').textContent = 'Passwords do not match.';
+        }
 
       if (isValid) {
-        Swal.fire({
-            title: 'Success!',
-            text: 'User registered successfully!',
-            icon: 'success',
-            confirmButtonText: 'OK'
-        })
-        .then((result) => {
-            if (result.isConfirmed) {
-                // Only submit the form after the user confirms
-                this.submit();
-            }
-        });
-        // this.submit();
+        try {
+          const formData= {name, email, password, password2, role};
+
+          const response= await fetch("/users/register", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(formData)
+          })
+
+          const result= await response.json();
+
+
+          if(result.success){
+            Swal.fire({
+              text: result.message,
+              icon: 'success'
+            }).then(()=>{
+              window.location.href= "/blogs";
+            })
+          }else{
+            let errormsg= result.errors.map(err=>err.message).join("\n");
+            console.log(errormsg)
+            Swal.fire({
+              text:errormsg,
+              icon: 'error'
+            })
+          }
+        } catch (error) {
+          Swal.fire({
+              text:"Something went wrong!",
+              icon: 'error'
+            })
+        }
       }
     });
 

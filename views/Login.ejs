@@ -26,6 +26,7 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         max-width: 400px;
         width: 100%;
+        /* min-height: 100px; */
       }
 
       .login-form h1 {
@@ -69,14 +70,6 @@
   <body>
     <form class="login-form" id="loginForm" action="/users/login" method="POST">
       <h1>Login</h1>
-      <!-- <ul class="no-bullet"> -->
-
-        <%# if(success_msg){ %>
-           <!-- <li class="success-msg"><%# success_msg %></li> -->
-        <%# }%>
-       <!-- </ul> -->
-   
-   
        <ul class="no-bullet">
         <% if(messages.error){ %>
            <li class="error-msg"><%=messages.error%></li>
@@ -109,6 +102,15 @@
     </form>
 
     <script>
+        var errormsg='<%= messages.error %>'
+      
+          if(errormsg){ 
+            Swal.fire({
+              text: '<%= messages.error %>',
+              icon:'error'
+            })
+            // return;
+           } 
 
       document.getElementById('loginForm').addEventListener('submit', function(event){
         event.preventDefault();
@@ -130,25 +132,28 @@
         //   document.getElementById('passwordError').textContent='Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, one number, and one special character';
         // }
 
-        // if(emailPattern.test(email) && passwordPattern.test(password)){
-        //   this.submit();
-        // }
-
-        
-        if(emailPattern.test(email) ){
+        if(emailPattern.test(email)){
           event.preventDefault();
           this.submit();
         }
+        // console.log(errormsg)
+        // if(!errormsg){
+        //   event.preventDefault();
+        //   Swal.fire({
+        //     text:"Login Successful",
+        //     icon: 'success'
+        //   }).then(()=>{
+        //     this.submit();
+
+        //   })
+        // }
+        
       })
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-   
-    
-
 
   </body>
 </html>

@@ -3,6 +3,7 @@ const router= express.Router();
 const client = require("../db/conn.js");
 const {checkNotAuthenticated}= require("../middlewares");
 const {checkPermission}= require("../middlewares")
+const bcrypt= require("bcrypt");
 
 router.get(
     "/",
@@ -47,7 +48,12 @@ router.get(
     const roles = roleResult.rows;
     // console.log(roles);
     if (errors.length > 0) {
-      res.render("register", { errors, roles });
+      // return res.render("register", { errors, roles });
+      return res.json({
+        success: false,
+        message: "Validation Failed",
+        errors,
+        roles});
     }
   
     try {
@@ -57,7 +63,13 @@ router.get(
       );
       if (emailResult.rows.length > 0) {
         errors.push({ message: "Email already exists" });
-        res.render("Register", { errors, roles });
+        // return res.render("Register", { errors, roles });
+        return res.json({
+          success:false,
+          message: "Email already exists",
+          errors,
+          roles
+        });
       }
   
       let hashedPass = await bcrypt.hash(password, 10);
@@ -65,11 +77,22 @@ router.get(
         "INSERT INTO users (name, email, password, role_id) VALUES ($1, $2, $3, $4)",
         [name, email, hashedPass, role]
       );
-      res.redirect("/blogs");
+      // res.redirect("/blogs");
+      return res.json({
+        success:true,
+        message:"User registered successfully",
+        roles
+      });
     } catch (error) {
       console.log(error);
       errors.push({ message: "Something went wrong, try again" });
-      res.render("Register", { errors, roles });
+      // res.render("Register", { errors, roles });
+      return res.json({
+        success:false,
+        message:"Something went wrong, try again",
+        errors,
+        roles
+      });
     }
   });
 

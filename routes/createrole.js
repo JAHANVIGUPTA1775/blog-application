@@ -28,7 +28,12 @@ router.post("/", async (req, res) => {
       );
   
       if (existinguser.rows.length > 0) {
-        res.status(400).send("role name already exists");
+
+        return res.json({
+            success: false,
+            message: "Role name already exists"
+          })
+        // res.status(400).send("role name already exists");
       }
       const result = await client.query(
         "INSERT INTO roles (role_name) VALUES ($1) RETURNING id",
@@ -46,10 +51,18 @@ router.post("/", async (req, res) => {
           })
         );
       }
-      res.redirect("/blogs");
+      return res.json({
+        success:true,
+        message: "Role created successfully"
+      })
+      // res.redirect("/blogs");
     } catch (error) {
       console.log(error);
-      res.status(500).send("error catching role");
+      return res.json({
+        success:false,
+        message: "error catching role"
+      })
+      // res.status(500).send("error catching role");
     }
   });
 

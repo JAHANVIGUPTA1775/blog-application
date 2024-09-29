@@ -34,7 +34,10 @@ router.get("/", async (req, res) => {
     }
   });
 
-  router.post("/blogs", upload.single("image"), async (req, res) => {
+  router.post("/", upload.single("image"), async (req, res) => {
+    if(!req.user){
+      return res.redirect("/users/login");
+    }
     const blogData = {
       title: req.body.title,
       category: req.body.category,
@@ -60,10 +63,18 @@ router.get("/", async (req, res) => {
         [user.id, newblog.rows[0].id]
       );
       // console.log("user", user);
-      res.redirect("/blogs");
+      return res.json({
+        success: true,
+        message: "Blog added successsfully"
+      })
+      // res.redirect("/blogs");
     } catch (err) {
       console.error(err);
-      res.status(500).send("Error saving blog");
+      return res.json({
+        success: false,
+        message: "Error saving blog"
+      })
+      // res.status(500).send("Error saving blog");
     }
   });
 

@@ -128,19 +128,58 @@
   <script>
     document
       .getElementById("createRoleForm")
-      .addEventListener("submit", (event) => {
+      .addEventListener("submit", async (event) => {
         event.preventDefault();
-        Swal.fire({
-          title: "Create Role",
-          text: "Role created successfully",
-          icon: "success",
-          confirmButtonText: "Okay",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Only submit the form after the user confirms
-            event.target.submit();
+
+        const rolename= document.getElementById('rolename').value;
+        const permissions=[]
+
+        document.querySelectorAll("input[name= 'permissions']:checked").forEach(input=>permissions.push(input.value));
+
+        try {
+          const response= await fetch("/createrole", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({rolename, permissions})
+          })
+
+          const result= await response.json();
+
+          if(result.success){
+           Swal.fire({
+             text: result.message,
+            icon:'success'
+           }).then(()=>{
+            window.location.href="/blogs"
+           });
+          }else{
+            Swal.fire({
+             text: result.message,
+            icon:'error'
+           })
           }
-        });
+    
+        } catch (error) {
+          
+          Swal.fire({
+              text:"Something went wrong!",
+              icon: 'error'
+            })
+        }
+
+
+
+        // Swal.fire({
+        //   title: "Create Role",
+        //   text: "Role created successfully",
+        //   icon: "success",
+        //   confirmButtonText: "Okay",
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     // Only submit the form after the user confirms
+        //     event.target.submit();
+        //   }
+        // });
       });
   </script>
 </html>

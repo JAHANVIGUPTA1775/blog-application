@@ -11,6 +11,7 @@ router.get("/", checkNotAuthenticated, async (req, res) => {
       [roleId]
     );
     const roleName = roleNameResult.rows[0].role_name;
+    // console.log(roleName);
   
     const permissionIdResult = await client.query(
       "SELECT * FROM rolehaspermission WHERE role_id =$1",
@@ -37,7 +38,7 @@ router.get("/", checkNotAuthenticated, async (req, res) => {
       // console.log(permissionNames);
       res.render("Profile", { permissionNames, roleName });
     } else {
-      res.render("Profile", { permissionNames: [] });
+      res.render("Profile", { permissionNames: [], roleName });
     }
   });
 

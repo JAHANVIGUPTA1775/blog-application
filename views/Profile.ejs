@@ -65,6 +65,9 @@
         font-size: 18px;
         color: #333;
       }
+      .container .no-permission{
+        color: grey;
+      }
     </style>
   </head>
   <body>
@@ -74,8 +77,13 @@
         <h2>Profile</h2>
         <p>Username: <%= user.name%></p>
         <p>Email: <%= user.email%></p>
-        <p>Your role is: <%= roleName %></p>
-        <p>You have the following authorizations:</p>
+        <p>Your role is: <%= roleName%></p>
+
+    
+
+        
+        <p>You have the following permissions:</p>
+        <% if(permissionNames.length >0){ %>
             <% if(permissionNames.includes('Create Blogs')){%>
             <a href="/createblog" class="create-blog-button">Create Blog</a>
             <% }%>
@@ -89,30 +97,20 @@
              <% if(permissionNames.includes('View Blogs')){%>
             <a href="/blogs" class="create-blog-button">View Blogs</a>
             <% }%>
-            <% if(permissionNames.includes('Delete All Blogs')){%>
-              <a href="/delete_blog" class="create-blog-button">Modify Blogs</a>
-              <% }%>
+            <!-- <%# if(permissionNames.includes('Modify Blogs')){%>
+              <a href="/modify" class="create-blog-button">Modify Blogs</a>
+              <%# }%> -->
             <%# if(permissionNames.includes('Delete Own Blogs')){%>
               <!-- <a href="/viewmyblog" class="create-blog-button">Delete My Blogs</a> -->
               <%# }%> 
               <%# if(permissionNames.includes('View Own Blogs')){%>
                 <!-- <a href="/blogs/edit/<%# user.id%>" class="create-blog-button">Edit All Blogs</a> -->
                 <%# }%>
-            
+       <% } else{ %>
+          <p class="no-permission">You do not have any permissions</p>
+        <% } %>
 
-        <!-- <%# if(user){ %> 
-                <%# if(user.role === 'author' || user.role === 'admin'){ %>
-                    <a href="/createblog" class="create-blog-button">Create Blog</a>
-                <%# } %> 
-                
-                <%# if(user.role === 'author'){ %>
-                    <a href="/viewmyblog" class="create-blog-button">View My Blogs</a>
-                <%# } %> 
-                
-                <%# if(user.role === 'admin'){ %>
-                    <a href="/admin" class="create-blog-button">Admin Panel</a>
-                <%# } %> 
-            <%# } %>  -->
+       
 
        
       </div>

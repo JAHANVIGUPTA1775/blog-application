@@ -123,19 +123,61 @@
   <script>
     CKEDITOR.replace('post');
    
-    document.getElementById("createBlogForm").addEventListener("submit", (event)=>{
+    document.getElementById("createBlogForm").addEventListener("submit", async (event)=>{
       event.preventDefault();
-      Swal.fire({
-          title: 'Create Blog',
-          text: "Blog added successfully",
-          icon: 'success',
-          confirmButtonText: 'Okay'
-        }) .then((result) => {
-            if (result.isConfirmed) {
-                // Only submit the form after the user confirms
-                event.target.submit();
-            }
-        });
+
+      // const title=document.getElementById("title").value;
+    
+      const post = CKEDITOR.instances['post'].getData(); 
+      const title= document.getElementById("title").value;
+      const category= document.getElementById("category").value;
+      const image= document.getElementById("image").files[0];
+
+      console.log(image);
+      if(post.length<20){
+        Swal.fire({
+          text: "Content should be at least 20 characters long",
+          icon:"warning"
+        })
+        return;
+      }
+
+
+      const formdata=new FormData();
+      formdata.append("title", title);
+      formdata.append("post", post);
+      formdata.append("image", image);
+      formdata.append("category", category);
+      try{
+        const response= await fetch("/blogs", {
+          method:"POST",
+          body: formdata
+        })
+
+        const result= await response.json();
+
+        if(result.success){
+          Swal.fire({
+            text: "Blog added successfully",
+            icon: 'success',
+            confirmButtonText: 'Okay'
+          }) .then((result) => {
+              window.location.href="/blogs";
+          });
+        }else{
+          Swal.fire({
+            text: result.message,
+            icon: 'error'
+          })
+        }
+      }catch (error) {
+          
+          Swal.fire({
+              text:"Something went wrong!",
+              icon: 'error'
+            })
+        }
+    
     })
 </script>
 </html>

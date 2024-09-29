@@ -126,7 +126,7 @@
             <p><%= blog.category %></p>
             </a>
             <div class="btn-pos">
-            <form id="delete-<%= blog.id %>" action="/delete_blog/<%= blog.id %>/?_method=DELETE" method="POST">
+            <form id="delete-<%= blog.id %>" action="/modify/<%= blog.id %>/?_method=DELETE" method="POST">
               <button type="submit" class="delete-button" onclick="confirmDelete('<%= blog.id %>')">Delete</button>
             </form>
             <form id="edit-<%= blog.id %>" action="/blogs/edit/<%= blog.id %>" method="GET">
@@ -149,6 +149,8 @@
       document.getElementById(`delete-${blogId}`).addEventListener("submit", (event)=>{
       event.preventDefault();
 
+      
+
       Swal.fire({
               text: 'Are you sure you want to delete this blog?',
               icon: 'warning',
@@ -159,6 +161,7 @@
           })
           .then((result) => {
               if (result.isConfirmed) {
+                  Swal.fire("Blog deleted successfully")
                   event.target.submit();
               }
           });
