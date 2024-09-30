@@ -5,10 +5,7 @@ const app=express();
 const port= 3000
 
 console.log(connection);
-
-
-
-
+connection();
 app.listen(port, async () => {
   console.log("starting database connection");
   await connection();

@@ -97,15 +97,49 @@
           justify-content: flex-end;
           gap: 10px;
         }
+        .blogs-header {
+        display: flex;
+        justify-content: end;
+      }
+      .search-button {
+        /* display: inline-block; */
+        padding: 7px 15px;
+        margin: 10px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+      }
+      .search-button:hover {
+        color: white;
+        background-color: #0056b3; /* Darker shade for hover */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+      }
+      .error-msg{
+        text-align: center;
+        color: gray;
+      }
         
       </style>
 </head>
 <body>
   
   <%- include('./partials/header')%>
-  
+  <div class="blogs-header">
+    <form id="se1" action="/viewmyblog" method="GET">
+      <input type="search" placeholder="Search Blogs" name="q"  value="<%= q%>"/>
+      <button type="submit" class="search-button">Search</button>
+    </form>
+  </div>
   <div class="content">
     <h1>My Blogs</h1>
+
+    <%if(blogs.length>0){ %>
+
+ 
     <ul>
         <% blogs.forEach(function(blog) { %>
           <li>
@@ -130,7 +164,11 @@
               </div>
           </li>
         <% }) %>
-    </ul>
+      </ul>
+
+   <% } else{ %>
+    <h3 class="error-msg">No blogs found matching your search</h3>
+   <% } %>
   </div>
   <%- include('./partials/footer')%>
       

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT|| 3000;
 const client = require("./db/conn.js");
 const multer = require("multer");
 const cors = require("cors");
@@ -98,7 +98,7 @@ app.use("/createrole", createroleRouter);
 app.use("/profile", profileRouter);
 
 
-connection();
+
 app.listen(port, () => {
   // console.log("starting database connection");
   console.log(`Example app listening on port ${port}`);

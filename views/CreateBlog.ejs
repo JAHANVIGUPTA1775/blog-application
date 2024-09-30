@@ -133,7 +133,14 @@
       const category= document.getElementById("category").value;
       const image= document.getElementById("image").files[0];
 
-      console.log(image);
+      // console.log(image);
+      if(title.length<3){
+        Swal.fire({
+          text: "Title should be at least 3 characters long",
+          icon:"warning"
+        })
+        return;
+      }
       if(post.length<20){
         Swal.fire({
           text: "Content should be at least 20 characters long",

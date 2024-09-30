@@ -30,7 +30,11 @@ router.delete("/:id", async (req, res) => {
     checkNotAuthenticated,
     checkPermission("Modify Blogs"),
     async (req, res) => {
+      const q= req.query.q;
+
       try {
+        // let blogresult;
+        // let 
         const blogresult = await client.query("SELECT * FROM blogs");
         const blogs = blogresult.rows;
         res.render("Modify", { blogs });
