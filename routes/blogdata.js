@@ -16,7 +16,7 @@ router.get("/:id", async (req, res) => {
     
     blog.formatDate = dateFormat(blog.createdon, "dddd, mmmm dS, yyyy, h:MM TT");
     blog.editDate = dateFormat(blog.edited_at, "mmmm dS, yyyy, h:MM TT");
-    res.render("blogdata", { blogs: result.rows[0] , username});
+    res.render("Blogdata", { blogs: result.rows[0] , username});
   });
   
   router.delete("/:id", checkNotAuthenticated, async (req, res) => {

@@ -4,7 +4,7 @@ const {checkAuthenticated}= require("../middlewares");
 const passport=require("passport")
 
 router.get("/", checkAuthenticated, (req, res) => {
-    return res.render("login");
+    return res.render("Login");
   });
   
 router.post(

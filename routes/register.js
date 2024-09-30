@@ -12,7 +12,7 @@ router.get(
     async (req, res) => {
       try {
         const roles = await client.query("SELECT * FROM roles");
-        res.render("register", { roles: roles.rows });
+        res.render("Register", { roles: roles.rows });
       } catch (error) {
         console.log(error);
         res.status(500).send("Internal server error");
