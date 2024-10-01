@@ -7,7 +7,7 @@ const client = new Client({
 
 async function check(){
     await client.connect()
-    // await client.query("SET search_path TO public");
+    await client.query("SET search_path TO public");
 }
 
 check();
