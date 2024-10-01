@@ -20,13 +20,14 @@ router.get("/", async (req, res) => {
         [limit, offset]
       );
       const totalPages = Math.ceil(totalBlogs / limit);
+     
       
       res.render("Blogcard", {
         blogs: blogsResult.rows,
         currentPage: page,
         totalPages: totalPages,
         user: req.user,
-        q: ""
+        q: "",
       });
     } catch (err) {
       console.log(err);
@@ -58,10 +59,10 @@ router.get("/", async (req, res) => {
         ]
       );
       // console.log(newblog.rows);
-      await client.query(
-        `INSERT INTO user_has_blogs (user_id, blog_id) VALUES ($1, $2)`,
-        [user.id, newblog.rows[0].id]
-      );
+      // await client.query(
+      //   `INSERT INTO user_has_blogs (user_id, blog_id) VALUES ($1, $2)`,
+      //   [user.id, newblog.rows[0].id]
+      // );
       // console.log("user", user);
       return res.json({
         success: true,
@@ -84,6 +85,7 @@ router.get("/", async (req, res) => {
         `SELECT * FROM blogs WHERE category = $1`,
         [req.params.cat]
       );
+      
       res.render("Blogcategory", {
         blogs: result.rows,
         category: req.params.cat,
@@ -93,5 +95,6 @@ router.get("/", async (req, res) => {
       res.status(500).send("Error fetching blogs");
     }
   });
+  
 
 module.exports = router;

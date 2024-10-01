@@ -29,6 +29,7 @@ const seeusersRouter= require("./routes/users.js")
 const logoutRouter= require("./routes/logout.js")
 const modifyRouter= require("./routes/modify.js")
 const searchRouter= require("./routes/search.js")
+const categoryRouter= require("./routes/category.js")
 
 app.use(express.json());
 app.use(cors());
@@ -59,6 +60,18 @@ app.use((req, res, next) => {
   res.locals.user = req.user; // 'req.user' contains the authenticated user if logged in
   next();
 });
+
+app.use(async (req,res, next)=>{
+  try {
+    const categoryResult= await client.query("SELECT * FROM categories");
+    res.locals.categories= categoryResult.rows;
+    next();
+  } catch (error) {
+    console.log("Error fetching categories",error);
+    res.locals.categories=[];
+    next();
+  }
+})
 
 app.use("/users/register", registerRouter);
 
@@ -99,7 +112,33 @@ app.use("/createrole", createroleRouter);
 
 app.use("/profile", profileRouter);
 
+app.use("/category", categoryRouter);
 
+app.get("/category", async(req,res)=>{
+  try {
+    const categoryResult= await client.query("SELECT * FROM categories");
+
+    console.log(categoryResult.rows);
+    // res.render("CreateCategory");
+    res.render("CreateCategory", {categories:categoryResult.rows });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error fetching categories");
+  }
+})
+
+app.post("/category/createcategory", async(req,res)=>{
+
+  const categoryName= req.body;
+  // console.log(categoryName); 
+  try {
+    await client.query('INSERT INTO categories (category_name) VALUES ($1)', [categoryName.categoryname]);
+    res.redirect("/category");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error creating category");
+  }
+})
 
 app.listen(port, () => {
   // console.log("starting database connection");

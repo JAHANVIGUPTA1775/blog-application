@@ -8,6 +8,7 @@ router.get(
     checkNotAuthenticated,
     checkPermission("Admin Panel"),
     async (req, res) => {
+     
       res.render("Adminpage");
     }
   );

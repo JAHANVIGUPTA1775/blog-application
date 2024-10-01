@@ -4,8 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html,
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .createrole-form {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      .createrole-form h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 16px;
+        color: #555;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .add-btn{
+        width: 30%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        margin: 20px;
+        flex: 1;
+        min-height: 430px;
+      }
+      .back-to-block-list {
+        margin-top: 5px;
+        display: flex;
+        justify-content: flex-end;
+        text-decoration-line: none;
+      }
+      .container2{
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+      }
+      .container3{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    </style>
 </head>
 <body>
-    this is create category
+    <%- include('./partials/header')%>
+
+    <div class="container">
+        <form action="/category/createcategory" id="createRoleForm" class="createrole-form" method="POST" >
+            <h1>Categories</h1>
+            <div class="form-group">
+                <label for="categoryname">Create New Category:</label>
+                <div class="container2">
+                    <input type="text" id="categoryname" name="categoryname" required />
+                    <button class="add-btn">Add</button>
+                </div>  
+            </div>
+            <div class="container3">
+                <%   categories.forEach(category=>{ %>
+                    <li><%= category.category_name %></li>
+                <%  }) %>
+            </div>
+            <a href="/blogs" class="back-to-block-list">Back to Home page</a>
+        </form>
+    </div>
+
+      <%- include('./partials/footer')%> 
 </body>
 </html>

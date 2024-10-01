@@ -6,10 +6,13 @@
   <title>Blog Card</title>
   
   <style>
-    body {
+    html,body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
     
     ul {
@@ -90,30 +93,40 @@
         max-height: 180px;
       }
     .container{
-      margin: 0;
-      padding: 0;
+      flex:1
       
     }
     .view{
       text-decoration: none;
     }
-        </style>
+    .container h3{
+      text-align: center;
+      color: gray;
+      margin-top: 10%;
+    }
+
+  </style>
 </head>
 <body>
   <%- include('./partials/header')%>
-  <ul>
-    <% blogs.forEach(function(blog) { %>
-      <li>
-        <a href="/blogdata/<%= blog.id %>" class="view">
-        <img src="<%= blog.image %>" alt="<%= blog.title %>">
-        <h2> <%= blog.title.length>35 ? blog.title.substr(0,35)+'...': blog.title %></h2>
-        <p><%= blog.category %></p>
-       
-        </a>
-      </li>
-    <% }) %>
-  </ul>
-  
+  <div class="container">
+   <% if(blogs.length>0){ %>
+      <ul>
+        <% blogs.forEach(function(blog) { %>
+          <li>
+            <a href="/blogdata/<%= blog.id %>" class="view">
+            <img src="<%= blog.image %>" alt="<%= blog.title %>">
+            <h2> <%= blog.title.length>35 ? blog.title.substr(0,35)+'...': blog.title %></h2>
+            <p><%= blog.category %></p>
+          
+            </a>
+          </li>
+        <% }) %>
+      </ul>
+   <% } else{ %>
+      <h3 class="error-msg">No blogs found</h3>
+   <% } %>
+</div>
   <%- include('./partials/footer')%>
 </body>
 </html>
