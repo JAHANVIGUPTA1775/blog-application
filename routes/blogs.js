@@ -36,13 +36,17 @@ router.get("/", async (req, res) => {
   });
 
   router.post("/", upload.single("image"), async (req, res) => {
+    console.log("File upload middleware hit"); // Check if this is printed
+    console.log(req.file);
     if(!req.user){
       return res.redirect("/users/login");
     }
+    console.log(req.file);
     const blogData = {
       title: req.body.title,
       category: req.body.category,
-      image: req.file ? `/uploads/${req.file.filename}` : null, // Use the randomly generated filename
+      // image: req.file ? `/uploads/${req.file.filename}` : null, // Use the randomly generated filename
+      image: req.file? req.file.path :null,
       post: req.body.post,
       author_id: req.user.id,
     };

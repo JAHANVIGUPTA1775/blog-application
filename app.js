@@ -11,7 +11,7 @@ const session = require("express-session");
 const flash = require("express-flash");
 const path = require("path");
 const methodOverride = require("method-override");
-
+const { storage } = require('./cloudinary.js'); 
 const { connection }= require("./db/sequalize")
 
 const blogsRouter=require("./routes/blogs")
