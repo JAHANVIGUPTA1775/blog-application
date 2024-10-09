@@ -91,12 +91,7 @@
     <%- include('./partials/header')%>
 
     <div class="container">
-      <form
-        action="/createrole"
-        id="createRoleForm"
-        class="createrole-form"
-        method="POST"
-      >
+      <form action="/createrole" id="createRoleForm" class="createrole-form">
         <h1>Create New Role</h1>
         <div class="form-group">
           <label for="rolename">Role name:</label>
@@ -131,43 +126,40 @@
       .addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const rolename= document.getElementById('rolename').value;
-        const permissions=[]
+        const rolename = document.getElementById("rolename").value;
+        const permissions = [];
 
-        document.querySelectorAll("input[name= 'permissions']:checked").forEach(input=>permissions.push(input.value));
-
+        document
+          .querySelectorAll("input[name= 'permissions[]']:checked")
+          .forEach((input) => permissions.push(input.value));
         try {
-          const response= await fetch("/createrole", {
+          const response = await fetch("/createrole", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({rolename, permissions})
-          })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rolename, permissions }),
+          });
 
-          const result= await response.json();
+          const result = await response.json();
 
-          if(result.success){
-           Swal.fire({
-             text: result.message,
-            icon:'success'
-           }).then(()=>{
-            window.location.href="/blogs"
-           });
-          }else{
+          if (result.success) {
             Swal.fire({
-             text: result.message,
-            icon:'error'
-           })
+              text: result.message,
+              icon: "success",
+            }).then(() => {
+              window.location.href = "/blogs";
+            });
+          } else {
+            Swal.fire({
+              text: result.message,
+              icon: "error",
+            });
           }
-    
         } catch (error) {
-          
           Swal.fire({
-              text:"Something went wrong!",
-              icon: 'error'
-            })
+            text: "Something went wrong!",
+            icon: "error",
+          });
         }
-
-
 
         // Swal.fire({
         //   title: "Create Role",

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-        html,
+      html,
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -49,23 +49,19 @@
         font-size: 16px;
       }
 
-
-      button {
-        width: 100%;
+      .add-btn {
+        width: 30%;
         padding: 10px;
         background-color: #007bff;
         color: #fff;
         border: none;
-        border-radius: 20px;
+        border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-      .add-btn{
-        width: 30%;
-      }
 
-      button:hover {
+      .add-btn:hover {
         background-color: #0056b3;
       }
 
@@ -84,40 +80,93 @@
         justify-content: flex-end;
         text-decoration-line: none;
       }
-      .container2{
+      .container2 {
         display: flex;
         flex-direction: row;
         gap: 8px;
       }
-      .container3{
+      .container3 {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        column-gap: 60px;
+      }
+      .category_item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .deleteCatBtn {
+        color: red;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        align-items: center;
+      }
+      .deleteCatBtn:hover {
+        color: darkred;
       }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <%- include('./partials/header')%>
 
     <div class="container">
-        <form action="/category/createcategory" id="createRoleForm" class="createrole-form" method="POST" >
-            <h1>Categories</h1>
-            <div class="form-group">
-                <label for="categoryname">Create New Category:</label>
-                <div class="container2">
-                    <input type="text" id="categoryname" name="categoryname" required />
-                    <button class="add-btn">Add</button>
-                </div>  
-            </div>
-            <div class="container3">
-                <%   categories.forEach(category=>{ %>
-                    <li><%= category.category_name %></li>
-                <%  }) %>
-            </div>
-            <a href="/blogs" class="back-to-block-list">Back to Home page</a>
-        </form>
+      <form
+        action="/category/createcategory"
+        id="createRoleForm"
+        class="createrole-form"
+        method="POST"
+      >
+        <h1>Categories</h1>
+        <div class="form-group">
+          <label for="categoryname">Create New Category:</label>
+          <div class="container2">
+            <input type="text" id="categoryname" name="categoryname" required />
+            <button class="add-btn">Add</button>
+          </div>
+        </div>
+        <div class="container3">
+          <% categories.forEach(category=>{ %>
+          <div class="category_item">
+            <p><%= category.category_name %></p>
+            <button class="deleteCatBtn" id="<%= category.id %>">
+              &times;
+            </button>
+          </div>
+          <% }) %>
+        </div>
+        <a href="/blogs" class="back-to-block-list">Back to Home page</a>
+      </form>
     </div>
 
-      <%- include('./partials/footer')%> 
-</body>
+    <%- include('./partials/footer')%>
+  </body>
+
+  <script>
+    document.querySelectorAll(".deleteCatBtn").forEach((button) => {
+      button.addEventListener("click", async function () {
+        event.preventDefault();
+        const categoryId = this.id;
+          const response = await fetch(`/category/delete/${categoryId}`, {
+            method: "DELETE",
+          });
+          console.log(response);
+          const result = await response.json();
+          if (result.success) {
+            Swal.fire({
+              text: result.message,
+              icon: "success",
+            }).then(() => {
+              window.location.href = "/admin";
+            });
+          } else {
+            Swal.fire({
+              text: result.message,
+              icon: "error",
+            });
+          }
+      });
+    });
+  </script>
 </html>

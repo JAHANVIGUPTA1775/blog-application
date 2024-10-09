@@ -1,6 +1,6 @@
 const client = require("../db/conn.js");
-const passport = require("passport");
-
+const RoleHasPermission = require("../models/rolehaspermission.js");
+const Permission = require("../models/permissions.js");
 
 function checkAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
@@ -17,43 +17,45 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 function checkPermission(permission) {
-    return async (req, res, next) => {
+  return async (req, res, next) => {
+    if (!req.user) {
+      return res.redirect("/users/login");
+    }
 
-        if(!req.user){
-            return res.redirect("/users/login");
-        }
+    const roleId = req.user.role_id;
+    const permissionIdResult = await RoleHasPermission.findAll({
+      where: { role_id: roleId },
+      attributes: ["permission_id"],
+    });
+    // const permissionIdResult = await client.query(
+    //   "SELECT * FROM rolehaspermission WHERE role_id =$1",
+    //   [roleId]
+    // );
 
-      const roleId = req.user.role_id;
-      const permissionIdResult = await client.query(
-        "SELECT * FROM rolehaspermission WHERE role_id =$1",
-        [roleId]
-      );
-  
-      const permissionsIds = permissionIdResult.rows.map(
-        (row) => row.permission_id
-      );
-  
-      if (permissionsIds.length > 0) {
-        const permissionNameResult = await client.query(
-          `SELECT per_name FROM permissions WHERE id = ANY($1)`,
-          [permissionsIds]
-        );
-  
-        const permissionNames = permissionNameResult.rows.map(
-          (row) => row.per_name
-        );
-        if (permissionNames.includes(permission)) {
-          return next();
-        }
-        res.render("AccessDenied");
+    const permissionsIds = permissionIdResult.map((row) => row.permission_id);
+
+    if (permissionsIds.length > 0) {
+      const permissionNameResult = await Permission.findAll({
+        where: { id: permissionsIds },
+        attributes: ["per_name"],
+      });
+      // const permissionNameResult = await client.query(
+      //   `SELECT per_name FROM permissions WHERE id = ANY($1)`,
+      //   [permissionsIds]
+      // );
+
+      const permissionNames = permissionNameResult.map((row) => row.per_name);
+      if (permissionNames.includes(permission)) {
+        return next();
       }
-    };
-  }
+      res.render("AccessDenied");
+    }
+  };
+}
 
-  
 // function checkRole(role, permission) {
 //     return async (req, res, next) => {
-  
+
 //       try {
 //         const permissionResult = await client.query(
 //           "SELECT id FROM permissions WHERE per_name= $1",
@@ -63,7 +65,7 @@ function checkPermission(permission) {
 //           return res.status(403).send("Permission not found");
 //         }
 //         const permissionId = permissionResult.rows[0].id;
-  
+
 //         const result = await client.query(
 //           "SELECT * FROM rolehaspermission WHERE permission_id = $1",
 //           [permissionId]
@@ -86,13 +88,13 @@ function checkPermission(permission) {
 //       }
 //       // const roleIdResult= await client.query("SELECT role_id from users where id=$1", [req.user.id]);
 //       // const roleId= roleIdResult.rows[0].role_id;
-  
+
 //       // const roleNameResult = await client.query(
 //       //     "SELECT role_name FROM roles WHERE id= $1",
 //       //     [roleId]
 //       //   );
 //       // const roleName = roleNameResult.rows[0].role_name;
-  
+
 //       // if (roleName === role) {
 //       //   return next();
 //       // }
@@ -100,4 +102,4 @@ function checkPermission(permission) {
 //     };
 //   }
 
-module.exports= {checkAuthenticated, checkNotAuthenticated, checkPermission};
+module.exports = { checkAuthenticated, checkNotAuthenticated, checkPermission };

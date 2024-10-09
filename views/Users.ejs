@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage User Permissions</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,6 +48,7 @@
         table th {
             background-color: #f5f9fc;
             color: rgb(16, 14, 14);
+            text-align: left;
         }
 
         table tr:hover {
@@ -53,7 +56,7 @@
         }
 
         .create-blog-button {
-            padding: 10px 20px;
+            padding: 8px 18px;
             font-size: 16px;
             color: #fff;
             background-color: #007bff;
@@ -81,6 +84,17 @@
             color: #333;
             margin-bottom: 20px;
         }
+        .delete-icon{
+            font-size: 20px;
+            align-items: center;
+        }
+        .delete-icon:hover{
+            color: #c00;
+        }
+        .userForm{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
@@ -89,17 +103,29 @@
         <!-- <h1>Manage User Permissions</h1> -->
         <div class="container">
             <h2>Users</h2>
+
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-active-tab" data-toggle="pill" href="#pills-active" role="tab" aria-controls="pills-active" aria-selected="true">Active Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-inactive-tab" data-toggle="pill" href="#pills-inactive" role="tab" aria-controls="pills-inactive" aria-selected="false">Inactive Users</a>
+                </li>
+            </ul>
+
             <table>
                 <thead>
                     <tr>
                         <th>Userame</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                    <% users.forEach(user => { %>
-                        <tr>
+                
+                        <tr class="user-row <%= user.status ? 'active': 'inactive' %>">
                             <td><%= user.name %></td>
                             <td><%= user.email %></td>
                             <td>
@@ -115,6 +141,14 @@
                                     <button type="submit" class="create-blog-button">Change Role</button>
                                 </form>
                             </td>
+                            <% if( user.status){ %>
+
+                                <td>
+                                    
+                                    <i class="fas fa-trash-alt delete-icon" onclick="confirmDelete('<%= user.id %>')"></i>
+                                </td>
+                            <% } %>
+                            
                         </tr>
                    <% }) %>
                 </tbody>
@@ -125,6 +159,34 @@
 </body>
 <script>
    
+    document.getElementById('pills-active-tab').addEventListener('click', function(){
+        this.classList.add('active');
+        document.querySelectorAll('.user-row').forEach((row)=>{
+            if(!row.classList.contains('inactive')){
+                row.style.display='';
+                
+            }
+            else{
+                row.style.display='none';
+            }
+        })
+        document.getElementById('pills-inactive-tab').classList.remove('active');
+    })
+
+    document.getElementById('pills-inactive-tab').addEventListener('click', function(){
+        this.classList.add('active');
+        document.querySelectorAll('.user-row').forEach((row)=>{
+            if(row.classList.contains('inactive')){
+                row.style.display='';
+                
+            }
+            else{
+                row.style.display='none';
+            }
+        })
+        document.getElementById('pills-active-tab').classList.remove('active');
+    })
+
    document.querySelectorAll(".userForm").forEach(form=>{
     form.addEventListener("submit", (event)=>{
       event.preventDefault();
@@ -141,6 +203,38 @@
         });
     })
    })
+
+   function confirmDelete(userId){
+    // event.preventDefault();
+    Swal.fire({
+        text: "Confirm delete the user?",
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes'
+    }).then(async (result)=>{
+        if(result.isConfirmed){
+            const response= await fetch(`/users/delete/${userId}`, {
+                method: 'POST'
+            })
+            const result= await response.json();
+            if(result.success){
+                Swal.fire({
+                    text:result.message
+                }).then(()=>{
+                    location.reload();
+                })
+
+            }
+            else{
+                Swal.fire({
+                    text:result.message
+                });
+            }
+        }
+    })
+   
+   }
     
 </script>
 

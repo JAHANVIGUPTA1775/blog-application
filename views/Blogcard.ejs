@@ -131,10 +131,6 @@
       .container {
         flex: 1;
       }
-      /* .error-msg{
-        color: gray;
-
-      } */
       h3 {
         color: grey;
         text-align: center;
@@ -153,7 +149,7 @@
     </div>
     <div class="container">
       
-      <% if(blogs.length>0){ %>
+      <% if(blogs && blogs.length>0){ %>
         <ul>
           <% blogs.forEach(function(blog) { %>
           <li>
